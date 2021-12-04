@@ -1,7 +1,7 @@
 <template>
 	<img alt="Vue logo" src="./assets/logo.png" />
 	<div class="container">
-		<PageHome />
+		<router-view />
 	</div>
 </template>
 
@@ -10,9 +10,6 @@
 
 	export default {
 		name: "App",
-		components: {
-			PageHome,
-		},
 	};
 </script>
 
