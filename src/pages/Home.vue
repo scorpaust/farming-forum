@@ -1,6 +1,6 @@
 <template>
 	<h1>Welcome to the Farming Forum</h1>
-	<ThreadList :threads="threads" />
+	<thread-list :threads="threads" />
 </template>
 
 <script>
