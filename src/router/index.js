@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import Category from '@/pages/Category'
+import Forum from '@/pages/Forum'
 import PageHome from '@/pages/Home'
 import PageNotFound from '@/pages/NotFound'
 import PageThreadShow from '@/pages/ThreadShow'
@@ -21,6 +23,8 @@ const routes = [
       query: to.query, hash: to.hash})
     }
   }},
+  { path: '/forum/:id', name: 'Forum', component: Forum, props: true },
+  { path: '/category/:id', name: 'Category', component: Category, props: true },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound },
 ]
 
