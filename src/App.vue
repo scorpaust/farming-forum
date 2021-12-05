@@ -1,13 +1,15 @@
 <template>
+	<the-navbar />
 	<div class="container">
 		<router-view />
 	</div>
 </template>
 
 <script>
-	import PageHome from "./pages/Home.vue";
+	import TheNavbar from "./components/TheNavbar.vue";
 
 	export default {
+		components: { TheNavbar },
 		name: "App",
 	};
 </script>

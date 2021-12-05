@@ -27,12 +27,8 @@
 		},
 		methods: {
 			save() {
-				const postId = "ggqq" + Math.random();
 				const post = {
-					id: postId,
 					text: this.text,
-					publishedAt: Math.floor(Date.now() / 1000),
-					userId: "rpbB8C6ifrYmNDufMERWfQUoa202",
 				};
 				this.$emit("save", { post }); // access under eventData.post
 				this.text = "";

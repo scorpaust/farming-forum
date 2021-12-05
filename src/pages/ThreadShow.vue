@@ -1,6 +1,15 @@
 <template>
 	<div class="col-large push-top">
-		<h1>{{ thread.title }}</h1>
+		<h1>
+			{{ thread.title }}
+			<router-link
+				:to="{ name: 'ThreadEdit', id: this.id }"
+				class="btn-green btn-small"
+				tag="button"
+			>
+				Edit Thread
+			</router-link>
+		</h1>
 		<post-list :posts="threadPosts" />
 		<post-editor @save="addPost" />
 	</div>
@@ -9,6 +18,7 @@
 <script>
 	import PostList from "@/components/PostList";
 	import PostEditor from "@/components/PostEditor";
+	import { findById } from "@/helpers";
 
 	export default {
 		name: "ThreadShow",
@@ -30,7 +40,7 @@
 				return this.$store.state.posts;
 			},
 			thread() {
-				return this.$store.state.threads.find((thread) => thread.id === this.id);
+				return findById(this.$store.state.threads, this.id);
 			},
 			threadPosts() {
 				return this.$store.state.posts.filter(
@@ -44,9 +54,7 @@
 					...eventData.post,
 					threadId: this.id,
 				};
-
-				this.posts.push(post);
-				this.thread.posts.push(post.id);
+				this.$store.dispatch("createPost", post);
 			},
 		},
 	};

@@ -460,7 +460,7 @@ textarea#user_bio {
 }
 
 span.offline::before {
-    font-family: FontAwesome;
+    font-family: "Font Awesome 5 Free";
     content: "\f1db";
     font-size: 14px;
     margin-right: 5px;
@@ -468,11 +468,10 @@ span.offline::before {
 
 span.online {
     color: #57AD8D;
+
 }
 
 span.online::before {
-    font-family: FontAwesome;
-    content: "\f2be";
     font-size: 14px;
     margin-right: 5px;
 }

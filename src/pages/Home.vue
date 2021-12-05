@@ -1,5 +1,5 @@
 <template>
-	<h1>Welcome to the Farming Forum</h1>
+	<h1 class="push-top">Welcome to the Farming Forum</h1>
 	<category-list :categories="categories" />
 </template>
 
