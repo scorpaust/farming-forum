@@ -1,7 +1,7 @@
 <template>
 	<div class="col-large push-top">
 		<h1>
-			{{ thread.title }}
+			{{ thread?.title }}
 			<router-link
 				:to="{ name: 'ThreadEdit', id: this.id }"
 				class="btn-green btn-small"
@@ -28,8 +28,6 @@
 <script>
 	import PostList from "@/components/PostList";
 	import PostEditor from "@/components/PostEditor";
-	import { collection, getDoc, doc } from "firebase/firestore";
-	import { db } from "../main";
 
 	export default {
 		name: "ThreadShow",
@@ -67,28 +65,16 @@
 			},
 		},
 		async created() {
-			const docRef = doc(db, `threads/${this.id}`);
-			const docSnap = await getDoc(docRef);
-			const thread = { ...docSnap.data(), id: docSnap.id };
-			this.$store.commit("setThread", { thread });
+			// fetch the thread
+			const thread = await this.$store.dispatch("fetchThread", { id: this.id });
 
 			// fetch the user
-			const uRef = doc(db, `users/${thread.userId}`);
-			const uSnap = await getDoc(uRef);
-			const user = { ...uSnap.data(), id: uSnap.id };
-			this.$store.commit("setUser", { user });
+			this.$store.dispatch("fetchUser", { id: thread?.userId });
 
 			// fetch the posts
 			thread.posts.forEach(async (postId) => {
-				const pRef = doc(db, `posts/${postId}`);
-				const pSnap = await getDoc(pRef);
-				const post = { ...pSnap.data(), id: pSnap.id };
-				this.$store.commit("setPost", { post });
-				// fetch the user for each post
-				const upRef = doc(db, `users/${post.userId}`);
-				const upSnap = await getDoc(upRef);
-				const user = { ...upSnap.data(), id: upSnap.id };
-				this.$store.commit("setUser", { user });
+				const post = await this.$store.dispatch("fetchPost", { id: postId });
+				this.$store.dispatch("fetchUser", { id: post.userId });
 			});
 		},
 	};

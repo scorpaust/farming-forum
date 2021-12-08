@@ -27,7 +27,6 @@ const routes = [
   },
   { path: '/thread/:id', name: 'ThreadShow', component: PageThreadShow, props: true, beforeEnter: (to, from, next) => {
     // check if thread exists~
-    console.log(sourceData.threads)
     const threadExists = findById(sourceData.threads, to.params.id)
     // if exists continue
     if (threadExists) {
