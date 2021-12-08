@@ -11,8 +11,8 @@
 			</router-link>
 		</h1>
 		<p>
-			By <a href="#" class="link-unstyled">{{ thread.author.name }}</a
-			>, <AppDate :timestamp="thread.publishedAt" />.
+			By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a
+			>, <app-date :timestamp="thread.publishedAt" />.
 			<span
 				style="float: right; margin-top: 2px"
 				class="hide-mobile text-faded text-small"
@@ -28,6 +28,8 @@
 <script>
 	import PostList from "@/components/PostList";
 	import PostEditor from "@/components/PostEditor";
+	import { collection, getDoc, doc } from "firebase/firestore";
+	import { db } from "../main";
 
 	export default {
 		name: "ThreadShow",
@@ -52,9 +54,7 @@
 				return this.$store.getters.thread(this.id);
 			},
 			threadPosts() {
-				return this.$store.state.posts.filter(
-					(post) => post.threadId === this.id
-				);
+				return this.posts.filter((post) => post.threadId === this.id);
 			},
 		},
 		methods: {
@@ -65,6 +65,31 @@
 				};
 				this.$store.dispatch("createPost", post);
 			},
+		},
+		async created() {
+			const docRef = doc(db, `threads/${this.id}`);
+			const docSnap = await getDoc(docRef);
+			const thread = { ...docSnap.data(), id: docSnap.id };
+			this.$store.commit("setThread", { thread });
+
+			// fetch the user
+			const uRef = doc(db, `users/${thread.userId}`);
+			const uSnap = await getDoc(uRef);
+			const user = { ...uSnap.data(), id: uSnap.id };
+			this.$store.commit("setUser", { user });
+
+			// fetch the posts
+			thread.posts.forEach(async (postId) => {
+				const pRef = doc(db, `posts/${postId}`);
+				const pSnap = await getDoc(pRef);
+				const post = { ...pSnap.data(), id: pSnap.id };
+				this.$store.commit("setPost", { post });
+				// fetch the user for each post
+				const upRef = doc(db, `users/${post.userId}`);
+				const upSnap = await getDoc(upRef);
+				const user = { ...upSnap.data(), id: upSnap.id };
+				this.$store.commit("setUser", { user });
+			});
 		},
 	};
 </script>

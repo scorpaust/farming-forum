@@ -1,11 +1,14 @@
 import { findById, upsert } from '@/helpers'
 
 import { createStore } from 'vuex'
-import sourceData from '@/data.json'
 
 export default createStore({
   state: {
-    ...sourceData,
+    categories: [],
+    forums: [],
+    threads: [],
+    posts: [],
+    users: [],
     authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2'
   },
   getters: {
@@ -42,13 +45,13 @@ export default createStore({
         return { 
           ...thread,
           get author () {
-            return findById(state.users, thread.userId)
+            return findById(state.users, thread?.userId)
           },
           get repliesCount () {
-            return thread.posts.length - 1
+            return thread?.posts.length - 1
           },
           get contributorsCount () {
-            return thread.contributors.length
+            return thread?.contributors.length
           }
         }  
       }
@@ -94,9 +97,8 @@ export default createStore({
     setThread (state, { thread }) {
       upsert(state.threads, thread)
     },
-    setUser (state, { user, userId }) {
-      const userIndex = state.users.findIndex(user => user.id === userId)
-      state.users[userIndex] = user
+    setUser (state, { user }) {
+      upsert(state.users, user)
     },
     appendPostToThread: makeAppendChildToParentMutation({parent: 'threads', child: 'posts'}),
     appendThreadToForum: makeAppendChildToParentMutation({parent: 'forums', child: 'threads' }),

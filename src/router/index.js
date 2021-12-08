@@ -26,7 +26,8 @@ const routes = [
     props: { edit: true }
   },
   { path: '/thread/:id', name: 'ThreadShow', component: PageThreadShow, props: true, beforeEnter: (to, from, next) => {
-    // check if thread exists
+    // check if thread exists~
+    console.log(sourceData.threads)
     const threadExists = findById(sourceData.threads, to.params.id)
     // if exists continue
     if (threadExists) {
@@ -34,7 +35,8 @@ const routes = [
     }
     // if doesn´t exist redirect user to PageNotFound
     else {
-      return next({name: 'NotFound', params: { pathMatch: to.$route.path.substring(1).split('/') }, 
+      console.log("não existe")
+      return next({name: 'NotFound', params: { pathMatch: to.path.substring(1).split('/') }, 
       // preserve existing query and hash
       query: to.query, hash: to.hash})
     }

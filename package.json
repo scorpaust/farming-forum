@@ -13,6 +13,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "core-js": "^3.6.5",
     "dayjs": "^1.10.7",
+    "firebase": "^9.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
@@ -24,7 +25,8 @@
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0"
+    "eslint-plugin-vue": "^7.0.0",
+    "firestore-export-import": "^0.17.0"
   },
   "browserslist": [
     "> 1%",
