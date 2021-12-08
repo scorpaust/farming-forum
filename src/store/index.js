@@ -64,7 +64,7 @@ export default createStore({
       post.id = 'ddwsws' + Math.random()
       post.userId  = state.authId
       post.publishedAt = Math.floor(Date.now() / 1000)
-      commit('setPost', { post })
+      commit('setItem', { resource: 'posts', item: post })
       commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
       commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
     },
@@ -73,7 +73,7 @@ export default createStore({
       const userId = state.authId
       const publishedAt = Math.floor(Date.now() / 1000)
       const thread = { forumId, title, publishedAt, userId, id }
-      commit('setThread', { thread })
+      commit('setItem', { resource: 'threads', item: thread })
       commit('appendThreadToUser', { parentId: userId, childId: id })
       commit('appendThreadToForum', { parentId: forumId, childId: id })
       dispatch('createPost', { text, threadId: id })
@@ -84,56 +84,37 @@ export default createStore({
       const post = findById(state.posts, thread.posts[0])
       const newThread = { ...thread, title }
       const newPost = { ...post, text }
-      commit('setThread', { thread: newThread })
-      commit('setPost', { post: newPost })
+      commit('setItem', { resource: 'threads', item: newThread })
+      commit('setItem', { resource: 'posts', item: newPost })
       return newThread
     },
     updateUser ({ commit }, user) {
-      commit('setUser', { user, userId: user.id })
+      commit('setItem', { resource: 'users', item: user })
     },
-    fetchThread ({state, commit}, { id }) {
-      return new Promise((res) => {
-        const docRef = doc(db, `threads/${id}`);
-        const docSnap = getDoc(docRef).then((doc) => {
-          const thread = { ...doc.data(), id: doc.id };
-        commit("setThread", { thread });
-        res(thread)
-        })
-        
-      })
+    fetchThread ({dispatch}, { id }) {
+      return dispatch('fetchItem', { resource: 'threads', id, emoji: '📰'})
     },
-    fetchUser ({state, commit}, { id }) {
-      return new Promise((res) => {
-        const docRef = doc(db, `users/${id}`);
-        const docSnap = getDoc(docRef).then((doc) => {
-          const user = { ...doc.data(), id: doc.id };
-          commit("setUser", { user });
-          res(user)
-        })
-
-      })
-
+    fetchUser ({dispatch}, { id }) {
+      return dispatch('fetchItem', { resource: 'users', id, emoji: '🙍'})
     },
-    fetchPost ({state, commit}, { id }) {
+    fetchPost ({dispatch}, { id }) {
+      return dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' })
+    },
+    fetchItem ({state, commit}, { id, emoji, resource}) {
+      console.log('🔥', emoji, id)
       return new Promise((res) => {
-        const docRef = doc(db, `posts/${id}`);
+        const docRef = doc(db, `${resource}/${id}`);
         const docSnap = getDoc(docRef).then((doc) => {
-          const post = { ...doc.data(), id: doc.id };
-          commit("setPost", { post });
-          res(post)
+          const item = { ...doc.data(), id: doc.id };
+          commit("setItem", { resource, id, item });
+          res(item)
         })
       })
     },
   },
   mutations: {
-    setPost(state, { post }) {
-      upsert(state.posts, post)
-    },
-    setThread (state, { thread }) {
-      upsert(state.threads, thread)
-    },
-    setUser (state, { user }) {
-      upsert(state.users, user)
+    setItem(state, {resource, item}) {
+      upsert(state[resource], item)
     },
     appendPostToThread: makeAppendChildToParentMutation({parent: 'threads', child: 'posts'}),
     appendThreadToForum: makeAppendChildToParentMutation({parent: 'forums', child: 'threads' }),
