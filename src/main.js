@@ -3,7 +3,7 @@ import AppDate from '@/components/AppDate.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createApp } from 'vue'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
-import firebaseConfig from "@/config/firebase"
+import { firebaseConfig } from "@/config/firebase"
 import { getFirestore } from "firebase/firestore"
 import { initializeApp } from "firebase/app";
 import { library } from '@fortawesome/fontawesome-svg-core'
