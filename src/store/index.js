@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { findById, upsert } from '@/helpers'
 
 import { createStore } from 'vuex'
@@ -100,11 +100,24 @@ export default createStore({
     fetchPost ({dispatch}, { id }) {
       return dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' })
     },
+    fetchAllCategories({ commit }) {
+      return new Promise((res) => {
+        const categories = getDocs(collection(db, "categories")).then((snapshot) => {
+          const cat = snapshot.docs.map(doc => {
+            const item = { id: doc.id, ...doc.data()}
+            commit('setItem', { resource: 'categories', item})
+            return item
+          })
+          res(cat)
+        })    
+            
+        })  
+    },
     fetchThreads({ dispatch }, { ids }) {
       return dispatch('fetchItems', { resource: 'threads', ids, emoji: '📰' })
     },
-    fetchUsers({ dispatch }, { ids }) {
-      return dispatch('fetchItems', { resource: 'users', ids, emoji: '🙍' })
+    fetchForums({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'forums', ids, emoji: '📬' })
     },
     fetchPosts({ dispatch }, { ids }) {
       return dispatch('fetchItems', { resource: 'posts', ids, emoji: '💬' })
