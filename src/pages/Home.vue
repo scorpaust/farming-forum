@@ -5,6 +5,7 @@
 
 <script>
 	import CategoryList from "@/components/CategoryList";
+	import { mapActions } from "vuex";
 
 	export default {
 		components: {
@@ -15,13 +16,14 @@
 				return this.$store.state.categories;
 			},
 		},
-		async beforeCreate() {
-			const categories = await this.$store
-				.dispatch("fetchAllCategories")
-				.then((categories) => {
-					const forumIds = categories.map((category) => category.forums).flat();
-					this.$store.dispatch("fetchForums", { ids: forumIds });
-				});
+		methods: {
+			...mapActions(["fetchAllCategories", "fetchForums"]),
+		},
+		async created() {
+			const categories = await this.fetchAllCategories().then((categories) => {
+				const forumIds = categories.map((category) => category.forums).flat();
+				this.fetchForums({ ids: forumIds });
+			});
 		},
 	};
 </script>

@@ -9,6 +9,7 @@
 <script>
 	import ForumList from "@/components/ForumList";
 	import { findById } from "@/helpers";
+	import { mapActions } from "vuex";
 
 	export default {
 		props: {
@@ -22,15 +23,22 @@
 		},
 		computed: {
 			category() {
-				return findById(this.$store.state.categories, this.id);
+				return findById(this.$store.state.categories, this.id) || {};
 			},
 		},
 		methods: {
+			...mapActions(["fetchCategory", "fetchForums"]),
 			getForumsForCategory(category) {
 				return this.$store.state.forums.filter(
 					(forum) => forum.categoryId === category.id
 				);
 			},
+		},
+		async created() {
+			const category = await this.fetchCategory({
+				id: this.id,
+			});
+			this.fetchForums({ ids: category.forums });
 		},
 	};
 </script>

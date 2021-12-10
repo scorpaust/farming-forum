@@ -6,6 +6,7 @@
 				<div>
 					<p>
 						<router-link
+							v-if="thread.id"
 							:to="{ name: 'ThreadShow', params: { id: thread.id } }"
 							>{{ thread.title }}</router-link
 						>
@@ -58,7 +59,7 @@
 				return findById(this.posts, postId);
 			},
 			userById(userId) {
-				return findById(this.users, userId);
+				return findById(this.users, userId) || {};
 			},
 		},
 	};
