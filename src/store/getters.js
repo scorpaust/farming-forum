@@ -37,10 +37,10 @@ export default {
           return findById(state.users, thread?.userId)
         },
         get repliesCount () {
-          return thread?.posts.length - 1
+          return thread.posts?.length - 1
         },
         get contributorsCount () {
-          return thread?.contributors.length
+          return thread.contributors?.length
         }
       }  
     }

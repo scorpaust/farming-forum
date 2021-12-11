@@ -1,28 +1,49 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore"
+import { arrayUnion, collection, doc, getDoc, getDocs, serverTimestamp, writeBatch } from "firebase/firestore"
 
 import { db } from '../main'
 import { findById } from "@/helpers"
 import state from "@/store/state"
 
 export default { 
-    createPost({commit, state}, post) {
-      post.id = 'ddwsws' + Math.random()
+    async createPost({commit, state}, post) {
       post.userId  = state.authId
-      post.publishedAt = Math.floor(Date.now() / 1000)
-      commit('setItem', { resource: 'posts', item: post })
-      commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
+      post.publishedAt = serverTimestamp()
+      const batch = writeBatch(db);
+      const postRef = doc(collection(db, "posts"))
+      const threadRef = doc(db, "threads", post.threadId) 
+      batch.set(postRef, post)
+      batch.update(threadRef, {
+        posts: arrayUnion(postRef.id),
+        contributors: arrayUnion(state.authId)
+      })
+      await batch.commit();
+      const newPost = await getDoc(postRef)
+      commit('setItem', { resource: 'posts', item: {...newPost.data(), id: newPost.id} })
+      commit('appendPostToThread', { childId: postRef.id, parentId: post.threadId })
       commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
     },
     async createThread({commit, state, dispatch}, {text, title, forumId}) {
-      const id = 'ggqq' + Math.random()
       const userId = state.authId
-      const publishedAt = Math.floor(Date.now() / 1000)
-      const thread = { forumId, title, publishedAt, userId, id }
-      commit('setItem', { resource: 'threads', item: thread })
-      commit('appendThreadToUser', { parentId: userId, childId: id })
-      commit('appendThreadToForum', { parentId: forumId, childId: id })
-      dispatch('createPost', { text, threadId: id })
-      return findById(state.threads, id)
+      const publishedAt = serverTimestamp()
+      const batch = writeBatch(db)
+      const threadRef = doc(collection(db, "threads"))
+      const thread = { forumId, title, publishedAt, userId, id: threadRef.id }
+      const userRef = doc(db, "users", userId)
+      const forumRef = doc(db, "forums", forumId)
+      batch.set(threadRef, thread)
+      batch.update(userRef, {
+        threads: arrayUnion(threadRef.id)
+      })
+      batch.update(forumRef, {
+        threads: arrayUnion(threadRef.id)
+      })
+      await batch.commit()
+      const newThread = await getDoc(threadRef)
+      commit('setItem', { resource: 'threads', item: {...newThread.data(), id: newThread.id}})
+      commit('appendThreadToUser', { parentId: userId, childId: threadRef.id })
+      commit('appendThreadToForum', { parentId: forumId, childId: threadRef.id })
+      dispatch('createPost', { text, threadId: threadRef.id })
+      return findById(state.threads, threadRef.id)
     },
     async updateThread ({ commit, state }, { title, text, id }) {
       const thread = findById(state.threads, id)
