@@ -10,7 +10,7 @@
 				Edit Thread
 			</router-link>
 		</h1>
-		<p>
+		<p v-if="thread.publishedAt">
 			By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a
 			>, <app-date :timestamp="thread.publishedAt" />.
 			<span

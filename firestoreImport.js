@@ -7,7 +7,7 @@ const tempFileName = `${__dirname}/data-temp.json`;
 
 // procedure
 (async () => {
-  const fileContents = fs.readFileSync(`${__dirname}/src/data.json`, 'utf8')
+  const fileContents = fs.readFileSync(`./src/data.json`, 'utf8')
   const data = JSON.parse(fileContents)
   const transformed = transformDataForFirestore(data)
   fs.writeFileSync(tempFileName, JSON.stringify(transformed))

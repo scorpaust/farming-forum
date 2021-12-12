@@ -10,6 +10,7 @@ import ThreadCreate from '@/pages/ThreadCreate'
 import ThreadEdit from '@/pages/ThreadEdit'
 import { findById } from '@/helpers'
 import sourceData from '@/data.json'
+import store from '@/store'
 
 const routes = [
   { path: '/', name: 'Home', component: PageHome },
@@ -52,7 +53,7 @@ const routes = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound },
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to) {
@@ -62,3 +63,9 @@ export default createRouter({
     return scroll
   }
 })
+
+router.beforeEach(() => {
+  store.dispatch('unsubscribeAllSnapshots')
+})
+
+export default router

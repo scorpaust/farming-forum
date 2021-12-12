@@ -1047,16 +1047,6 @@ form {
     color: #bbbbbb;
 }
 
-.form-input:disabled::placeholder {
-    color: #bbbbbb;
-}
-
-.form-input::placeholder {
-    font-size: inherit;
-    font-weight: 300;
-    color: #878787;
-}
-
 .form-input:focus {
     outline: none;
     border: 1px solid #c7c7c7;
