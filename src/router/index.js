@@ -26,7 +26,7 @@ const routes = [
     component: Profile,
     props: { edit: true }
   },
-  { path: '/thread/:id', name: 'ThreadShow', component: PageThreadShow, props: true, beforeEnter: (to, from, next) => {
+  { path: '/thread/:id', name: 'ThreadShow', component: PageThreadShow, props: true, /*beforeEnter: (to, from, next) => {
     // check if thread exists~
     const threadExists = findById(sourceData.threads, to.params.id)
     // if exists continue
@@ -40,7 +40,7 @@ const routes = [
       // preserve existing query and hash
       query: to.query, hash: to.hash})
     }
-  }},
+  }*/},
   { path: '/forum/:forumId/thread/create', name: 'ThreadCreate', component: ThreadCreate, props: true},
   {
     path: '/thread/:id/edit',
