@@ -3,6 +3,7 @@ import AppDate from '@/components/AppDate.vue'
 import { createApp } from 'vue'
 import firebaseConfig from "@/config/firebase"
 import fontAwesome from './plugins/fontAwesome'
+import { getAuth } from "firebase/auth"
 import { getFirestore } from "firebase/firestore"
 import { initializeApp } from "firebase/app";
 import router from '@/router'
@@ -28,5 +29,12 @@ requireComponent.keys().forEach(function (fileName) {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore();
+
+getAuth().onAuthStateChanged(user => {
+  if (user) {
+    store.dispatch('fetchAuthUser')
+  }
+})
+
 
 forumApp.mount('#app')

@@ -6,10 +6,10 @@ import PageHome from '@/pages/Home'
 import PageNotFound from '@/pages/NotFound'
 import PageThreadShow from '@/pages/ThreadShow'
 import Profile from '@/pages/Profile'
+import Register from '@/pages/Register'
+import SignIn from '@/pages/SignIn'
 import ThreadCreate from '@/pages/ThreadCreate'
 import ThreadEdit from '@/pages/ThreadEdit'
-import { findById } from '@/helpers'
-import sourceData from '@/data.json'
 import store from '@/store'
 
 const routes = [
@@ -48,8 +48,14 @@ const routes = [
     component: ThreadEdit,
     props: true
   },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
   { path: '/forum/:id', name: 'Forum', component: Forum, props: true },
   { path: '/category/:id', name: 'Category', component: Category, props: true },
+  { path: '/signin', name: 'SignIn', component: SignIn },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound },
 ]
 

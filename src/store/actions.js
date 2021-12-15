@@ -1,4 +1,5 @@
-import { arrayUnion, collection, doc, getDoc, getDocs, increment, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore"
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, getRedirectResult, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { arrayUnion, collection, doc, getDoc, getDocs, increment, serverTimestamp, setDoc, updateDoc, writeBatch } from "firebase/firestore"
 import { docToResource, findById } from "@/helpers"
 
 import { db } from '../main'
@@ -80,6 +81,46 @@ export default {
       commit('setItem', { resource: 'posts', item: newPost })
       return docToResource(newThread)
     },
+    async registerUserWithEmailAndPassword({ dispatch }, {avatar = null, email, name, username, password } ) {
+      const auth = getAuth();
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
+      await dispatch('createUser', { id: result.user.uid, email, name, username, avatar })
+    },
+    signInWithEmailAndPassword(context, {email, password}) {
+      const auth = getAuth()
+      return signInWithEmailAndPassword(auth, email, password)
+    },
+    async signInWithGoogle({dispatch, commit}) {
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      const response = await signInWithPopup(auth, provider)
+      const user = response.user;
+      const userRef = doc(db, 'users', user.uid)
+      const userDoc = await getDoc(userRef)
+      if (!userDoc.exists)
+        return dispatch('createUser', {id: user.uid, email: user.email, name: user.displayName, username: user.email, avatar: user.photoURL})
+      else 
+        commit('setAuthId', user.uid)
+    },
+    async signOut({commit}) {
+      await getAuth().signOut()
+      commit('setAuthId', null)
+    },
+    async createUser({commit}, {id, email, name, username, avatar = null}) {
+      const registeredAt = serverTimestamp()
+      const usernameLower = username.toLowerCase()
+      email = email.toLowerCase()
+      const user = {avatar, email, name, username, usernameLower, registeredAt }
+      const userRef = doc(db, 'users', id)
+      await setDoc(userRef, user)
+      const newUser = await getDoc(userRef)
+      commit('setItem', { resource: 'users', item: newUser })
+      return docToResource(newUser)
+    },
     updateUser ({ commit }, user) {
       commit('setItem', { resource: 'users', item: user })
     },
@@ -93,8 +134,12 @@ export default {
     
     fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { emoji: '🙋', resource: 'users', id }),
 
-    fetchAuthUser: ({ dispatch }) => dispatch('fetchItem', { emoji: '🙋', resource: 'users', id: state.authId }),
-
+    fetchAuthUser: async ({ dispatch, state, commit }) => {
+      const userId = getAuth().currentUser?.uid
+      if (!userId) return
+      dispatch('fetchItem', { resource: 'users', id: userId, emoji:'🙋'})
+      commit('setAuthId', userId)
+    },
     fetchAllCategories({ commit }) {
       return new Promise((res) => {
         const categories = getDocs(collection(db, "categories")).then((snapshot) => {
