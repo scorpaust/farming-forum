@@ -100,11 +100,12 @@ export default {
       const response = await signInWithPopup(auth, provider)
       const user = response.user;
       const userRef = doc(db, 'users', user.uid)
-      const userDoc = await getDoc(userRef)
-      if (!userDoc.exists)
-        return dispatch('createUser', {id: user.uid, email: user.email, name: user.displayName, username: user.email, avatar: user.photoURL})
-      else 
-        commit('setAuthId', user.uid)
+      await getDoc(userRef).then((userDoc) => {
+        if (userDoc != null)
+          return dispatch('createUser', {id: user.uid, email: user.email, name: user.displayName, username: user.email, avatar: user.photoURL})
+        else 
+          commit('setAuthId', user.uid)
+      })
     },
     async signOut({commit}) {
       await getAuth().signOut()
@@ -137,7 +138,9 @@ export default {
     fetchAuthUser: async ({ dispatch, state, commit }) => {
       const userId = getAuth().currentUser?.uid
       if (!userId) return
-      dispatch('fetchItem', { resource: 'users', id: userId, emoji:'🙋'})
+      dispatch('fetchItem', { resource: 'users', id: userId, emoji:'🙋', handleUnsubscribe: (unsubscribe) => {
+        commit('setAuthUserUnsubscribe', unsubscribe)
+      }})
       commit('setAuthId', userId)
     },
     fetchAllCategories({ commit }) {
@@ -163,7 +166,7 @@ export default {
     
     fetchUsers: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'users', ids, emoji: '🙋' }),
     
-    fetchItem ({state, commit}, { id, emoji, resource}) {
+    fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null}) {
       console.log('🔥', emoji, id)
       return new Promise((res) => {
         const docRef = doc(db, `${resource}/${id}`);
@@ -172,7 +175,11 @@ export default {
           commit("setItem", { resource, id, item });
           res(item)
         })
-        commit('appendUnsubscribe', { docSnap })
+        if (handleUnsubscribe) {
+          handleUnsubscribe(docSnap)
+        } else {
+          commit('appendUnsubscribe', { docSnap })
+        }
       })
     },
     fetchItems({ dispatch }, { ids, resource, emoji }) {
@@ -182,5 +189,11 @@ export default {
     async unsubscribeAllSnapshots({state, commit}) {
       state.unsubscribes.forEach((unsubscribe) => `${unsubscribe}()`)
       commit('clearAllUnsubscribes')
+    },
+    async unsubscribeAuthUserSnapshot ({ state, commit }) {
+      if (state.authUserUnsubscribe) {
+        state.authUserUnsubscribe()
+        commit('setAuthUserUnsubscribe', null)
+      }
     }
 }
