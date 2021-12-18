@@ -31,7 +31,6 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore();
 
 getAuth().onAuthStateChanged(user => {
-  store.dispatch('unsubscribeAuthUserSnapshot')
   if (user) {
     store.dispatch('fetchAuthUser')
   }

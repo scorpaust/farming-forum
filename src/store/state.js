@@ -4,7 +4,7 @@ export default {
   threads: [],
   posts: [],
   users: [],
-  authId: "fvTCkYTkaEetEFsn4mF0Mk1qPFT2",
+  authId: null,
   unsubscribes: [],
   authUserUnsubscribe: null
 }

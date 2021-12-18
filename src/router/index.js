@@ -18,7 +18,7 @@ const routes = [
     path: '/me',
     name: 'Profile',
     component: Profile,
-    meta: { toTop: true, smoothScroll: true}
+    meta: { toTop: true, smoothScroll: true, requiresAuth: true }
   },
   {
     path: '/me/edit',
@@ -56,6 +56,10 @@ const routes = [
   { path: '/forum/:id', name: 'Forum', component: Forum, props: true },
   { path: '/category/:id', name: 'Category', component: Category, props: true },
   { path: '/signin', name: 'SignIn', component: SignIn },
+  { path: '/signout', name: 'SignOut', async beforeEnter (to, from) {
+    await store.dispatch('signOut')
+    return { name: 'Home'}
+  } },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound },
 ]
 
@@ -70,8 +74,11 @@ const router = createRouter({
   }
 })
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
   store.dispatch('unsubscribeAllSnapshots')
+  if (to.meta.requiresAuth && !store.state.authId) {
+    return { name: 'Home'}
+  }
 })
 
 export default router
