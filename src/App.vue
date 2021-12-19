@@ -1,7 +1,7 @@
 <template>
 	<the-navbar />
 	<div class="container">
-		<router-view v-show="showPage" @ready="onPageReady" />
+		<router-view v-show="showPage" @ready="onPageReady" :key="$route.path" />
 		<app-spinner v-show="!showPage" />
 	</div>
 </template>
@@ -20,7 +20,7 @@
 			};
 		},
 		methods: {
-			...mapActions(["fetchAuthUser"]),
+			...mapActions("auth", ["fetchAuthUser"]),
 			onPageReady() {
 				this.showPage = true;
 				NProgress.done();

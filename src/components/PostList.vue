@@ -71,13 +71,13 @@
 		},
 		computed: {
 			users() {
-				return this.$store.state.users;
+				return this.$store.state.users.items;
 			},
 		},
 		methods: {
-			...mapActions(["updatePost"]),
+			...mapActions("posts", ["updatePost"]),
 			userById(userId) {
-				return this.$store.getters.user(userId);
+				return this.$store.getters["users/user"](userId);
 			},
 			toggleEditMode(id) {
 				this.editing = id === this.editing ? null : id;

@@ -30,11 +30,5 @@ requireComponent.keys().forEach(function (fileName) {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore();
 
-getAuth().onAuthStateChanged(user => {
-  if (user) {
-    store.dispatch('fetchAuthUser')
-  }
-})
-
 
 forumApp.mount('#app')

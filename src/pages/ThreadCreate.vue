@@ -33,18 +33,18 @@
 		mixins: [asyncDataStatus],
 		computed: {
 			forum() {
-				return findById(this.$store.state.forums, this.forumId);
+				return findById(this.$store.state.forums.items, this.forumId);
 			},
 		},
 		methods: {
-			...mapActions(["fetchForum", "createThread"]),
+			...mapActions("forums", ["fetchForum"]),
+			...mapActions("threads", ["createThread"]),
 			async save({ title, text }) {
 				const thread = await this.createThread({
 					forumId: this.forum.id,
 					title,
 					text,
 				});
-
 				this.$router.push({ name: "ThreadShow", params: { id: thread.id } });
 			},
 
