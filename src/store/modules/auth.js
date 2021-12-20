@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
-import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore"
+import {collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where} from "firebase/firestore"
 
 import { db } from '../../main'
 
@@ -71,12 +71,22 @@ export default {
       }}, {root: true} )
       commit('setAuthId', userId)
     },
-    async fetchAuthUsersPosts ({ commit, state }) {
-      const postsRef = collection(db, "posts")
-      const posts = await getDocs(query(postsRef, where("userId", "==", state.authId)))
-      posts.forEach(item => {
+    async fetchAuthUsersPosts ({ commit, state }, {lastPost}) {
+      const postsRef = await collection(db, "posts")
+      let postsQuery = await getDocs(query(postsRef, where("userId", "==", state.authId), orderBy("publishedAt", "desc"), limit(10)))
+      const posts = []
+      if (lastPost) {
+        const next = query(postsQuery.query, startAfter(lastPost))
+        const posts = await getDocs(next)
+        posts.forEach(item => {
         commit('setItem', { resource: 'posts', item }, {root: true})
-      })
+        })
+      } else {
+        const posts = postsQuery
+        posts.forEach(item => {
+          commit('setItem', { resource: 'posts', item }, {root: true})
+          })
+      }
     },
     async unsubscribeAuthUserSnapshot ({ state, commit }) {
       if (state.authUserUnsubscribe) {
