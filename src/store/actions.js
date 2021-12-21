@@ -7,7 +7,7 @@ import state from "@/store/state"
 export default { 
     
     
-    fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null, once = false}) {
+    fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null, once = false, onSnapshot = null}) {
       console.log('🔥', emoji, id)
       return new Promise((res) => {
         const docRef = doc(db, `${resource}/${id}`);
@@ -15,22 +15,28 @@ export default {
         if (once) res(unsubscribe)
         if (doc.exists) {
           const item = { ...doc.data(), id: doc.id }
+          let previousItem = findById(state[resource].items, id)
+          previousItem = previousItem ? { ...previousItem } : null
           commit('setItem', { resource, item })
+          if (typeof onSnapshot === 'function') {
+            const isLocal = doc.metadata.hasPendingWrites
+            onSnapshot({ item: { ...item }, previousItem, isLocal })
+          }
           res(item)
         } else {
           res(null)
         }
       })
 
-        if (handleUnsubscribe !== null) {
+        if (handleUnsubscribe) {
           handleUnsubscribe(unsubscribe)
         } else {
           commit('appendUnsubscribe', { unsubscribe })
         }
       })
     },
-    fetchItems({ dispatch }, { ids, resource, emoji }) {
-      return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource, emoji })))
+    fetchItems({ dispatch }, { ids, resource, emoji, onSnapshot = null }) {
+      return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource, emoji, onSnapshot })))
       
     },
     async unsubscribeAllSnapshots({state, commit}) {

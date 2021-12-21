@@ -89,10 +89,10 @@ export default {
       }
     },
     async unsubscribeAuthUserSnapshot ({ state, commit }) {
-      if (state.authUserUnsubscribe) {
-        state.authUserUnsubscribe
-        commit('setAuthUserUnsubscribe', null)        
+      if (state.authUserUnsubscribe) {       
+        state.authUserUnsubscribe()
       }
+      commit('setAuthUserUnsubscribe', null) 
     }
   },
   mutations: {

@@ -32,7 +32,7 @@
 					</p>
 				</div>
 				<a
-					v-if="post.userId === $store.state.authId"
+					v-if="post.userId === $store.state.auth.authId"
 					@click.prevent="toggleEditMode(post.id)"
 					href="#"
 					style="margin-left: auto; padding-left: 10px"

@@ -17,8 +17,8 @@
 			<span
 				style="float: right; margin-top: 2px"
 				class="hide-mobile text-faded text-small"
-				>{{ thread.repliesCount }} replies by
-				{{ thread.contributorsCount }} contributors</span
+				>{{ thread?.repliesCount }} replies by
+				{{ thread?.contributorsCount }} contributors</span
 			>
 		</p>
 		<post-list :posts="threadPosts" />
@@ -42,12 +42,18 @@
 	import PostEditor from "@/components/PostEditor";
 	import { mapActions, mapGetters } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";
+	import useNotifications from "@/composables/useNotifications";
+	import difference from "lodash";
 
 	export default {
 		name: "ThreadShow",
 		components: {
 			PostList,
 			PostEditor,
+		},
+		setup() {
+			const { addNotification } = useNotifications();
+			return { addNotification };
 		},
 		mixins: [asyncDataStatus],
 		props: {
@@ -75,6 +81,25 @@
 			...mapActions("posts", ["createPost", "fetchPost", "fetchPosts"]),
 			...mapActions("threads", ["fetchThread"]),
 			...mapActions("users", ["fetchUsers", "fetchUser"]),
+			async fetchPostsWithUsers(ids) {
+				// fetch the posts
+				const posts = await this.fetchPosts({
+					ids,
+					onSnapshot: ({ isLocal, previousItem }) => {
+						console.log(isLocal);
+						if (
+							!this.asyncDataStatus_ready ||
+							isLocal ||
+							(previousItem?.edited && !previousItem?.edited?.at)
+						)
+							return;
+						this.addNotification({ message: "Thread recently updated" });
+					},
+				});
+				// fetch the users associated with the posts
+				const users = posts.map((post) => post.userId).concat(this.thread.userId);
+				await this.fetchUsers({ ids: users });
+			},
 			addPost(eventData) {
 				const post = {
 					...eventData.post,
@@ -85,16 +110,21 @@
 		},
 		async created() {
 			// fetch the thread
-			const thread = await this.fetchThread({ id: this.id });
-
-			// fetch the posts
-			const posts = await this.fetchPosts({
-				ids: thread.posts,
+			const thread = await this.fetchThread({
+				id: this.id,
+				onSnapshot: async ({ isLocal, item, previousItem }) => {
+					if (!this.asyncDataStatus_ready || isLocal) return;
+					const newPosts = difference(item.posts, previousItem.posts);
+					const hasNewPosts = newPosts.length > 0;
+					if (hasNewPosts) {
+						await this.fetchPostsWithUsers(newPosts);
+					} else {
+						this.addNotification({ message: "Thread recently updated" });
+					}
+				},
 			});
 
-			// fetch the users
-			const users = posts.map((post) => post.userId).concat(thread.userId);
-			this.fetchUsers({ ids: users });
+			await this.fetchPostsWithUsers(thread.posts);
 			this.asyncDataStatus_fetched();
 		},
 	};
