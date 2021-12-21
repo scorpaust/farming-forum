@@ -1,4 +1,5 @@
 import {collection, getDocs} from "firebase/firestore"
+import { makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
 
 import { db } from "../../main"
 
@@ -9,8 +10,8 @@ export default {
   },
   getters: {},
   actions: {
-    fetchCategory: ({ dispatch }, { id }) => dispatch('fetchItem', { emoji: '🏷', resource: 'categories', id }, {root: true}),
-    fetchCategories: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'categories', ids, emoji: '🏷' }, {root: true}),
+    fetchCategory: makeFetchItemAction({ emoji: '🏷', resource: 'categories' }),
+    fetchCategories: makeFetchItemsAction({ emoji: '🏷', resource: 'categories' }),
     fetchAllCategories({ commit }) {
       return new Promise((res) => {
         const categories = getDocs(collection(db, "categories")).then((snapshot) => {

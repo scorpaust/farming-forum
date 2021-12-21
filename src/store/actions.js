@@ -7,19 +7,21 @@ import state from "@/store/state"
 export default { 
     
     
-    fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null}) {
+    fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null, once = false}) {
       console.log('🔥', emoji, id)
       return new Promise((res) => {
         const docRef = doc(db, `${resource}/${id}`);
         const unsubscribe = getDoc(docRef).then((doc) => {
-          if (doc.exists) {
-            const item = { ...doc.data(), id: doc.id };
-            commit("setItem", { resource, id, item });
-            res(item)
-          } else {
-            res(null)
-          }
-        })
+        if (once) res(unsubscribe)
+        if (doc.exists) {
+          const item = { ...doc.data(), id: doc.id }
+          commit('setItem', { resource, item })
+          res(item)
+        } else {
+          res(null)
+        }
+      })
+
         if (handleUnsubscribe !== null) {
           handleUnsubscribe(unsubscribe)
         } else {

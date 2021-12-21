@@ -90,7 +90,7 @@ export default {
     },
     async unsubscribeAuthUserSnapshot ({ state, commit }) {
       if (state.authUserUnsubscribe) {
-        state.authUserUnsubscribe()
+        state.authUserUnsubscribe
         commit('setAuthUserUnsubscribe', null)        
       }
     }

@@ -1,4 +1,5 @@
 import { arrayUnion, collection, doc, getDoc, increment, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
+import { makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
 
 import { db } from "../../main"
 
@@ -44,8 +45,8 @@ export default {
       const updatedPost = await getDoc(postRef)
       commit('setItem', { resource: 'posts', item: updatedPost }, {root: true})
     },
-    fetchPost: ({dispatch}, { id }) => dispatch('fetchItem', { emoji: '💬', resource: 'posts', id }, {root: true}),
-    fetchPosts: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'posts', ids, emoji: '💬' }, {root: true}),
+    fetchPost: makeFetchItemAction({ emoji: '💬', resource: 'posts' }),
+    fetchPosts: makeFetchItemsAction({ emoji: '💬', resource: 'posts' })
   },
   mutations: {}
 }

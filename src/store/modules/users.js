@@ -1,5 +1,5 @@
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
-import { docToResource, findById, makeAppendChildToParentMutation } from '@/helpers'
+import { docToResource, findById, makeAppendChildToParentMutation, makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
 
 import { db } from '../../main'
 
@@ -57,8 +57,8 @@ export default {
       await updateDoc(userRef, updates)
       commit('setItem', { resource: 'users', item: user }, { root: true })
     },
-    fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { emoji: '🙋', resource: 'users', id }, { root: true }),
-    fetchUsers: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'users', ids, emoji: '🙋' }, { root: true }),
+    fetchUser: makeFetchItemAction({ emoji: '🙋', resource: 'users' }),
+    fetchUsers: makeFetchItemsAction({ resource: 'users', emoji: '🙋' })
   },
   mutations: {
     appendThreadToUser: makeAppendChildToParentMutation({parent: 'users', child: 'threads'})
