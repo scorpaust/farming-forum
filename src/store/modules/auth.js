@@ -20,9 +20,9 @@ export default {
       if (state.authObserverUnsubscribe) state.authObserverUnsubscribe()
       return new Promise((res) => {
         const unsubscribe = getAuth().onAuthStateChanged(async (user) => {
-          this.dispatch('auth/unsubscribeAuthUserSnapshot')
+          dispatch('unsubscribeAuthUserSnapshot')
           if (user) {
-            await this.dispatch('auth/fetchAuthUser')
+            await dispatch('fetchAuthUser')
             res(user)
           } else {
             res(null)
@@ -64,7 +64,7 @@ export default {
     },
 
     fetchAuthUser: async ({ dispatch, state, commit }) => {
-      const userId = await getAuth().currentUser?.uid
+      const userId = getAuth().currentUser?.uid
       if (!userId) return
       await dispatch('fetchItem', { emoji:'🙋', resource: 'users', id: userId, handleUnsubscribe: (unsubscribe) => {
         commit('setAuthUserUnsubscribe', unsubscribe)
@@ -89,8 +89,8 @@ export default {
       }
     },
     async unsubscribeAuthUserSnapshot ({ state, commit }) {
-      if (state.authUserUnsubscribe) {       
-        state.authUserUnsubscribe()
+      if (this.state.authUserUnsubscribe) {       
+        this.state.authUserUnsubscribe()
       }
       commit('setAuthUserUnsubscribe', null) 
     }
