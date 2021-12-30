@@ -7,6 +7,7 @@ import { createApp } from 'vue'
 import { firebaseConfig }  from "@/config/firebase"
 import fontAwesome from './plugins/fontAwesome'
 import { getFirestore } from "firebase/firestore"
+import { getStorage } from "firebase/storage"
 import { initializeApp } from "firebase/app";
 import router from '@/router'
 import store from '@/store'
@@ -22,8 +23,6 @@ forumApp.use(Vue3Pagination)
 
 const components = import.meta.globEager('./components/App*')
 
-console.log(components)
-
 Object.entries(components).forEach(([path, definition]) => {
   // Get name of component, based on filename
   // "./components/Fruits.vue" will become "Fruits"
@@ -35,6 +34,6 @@ Object.entries(components).forEach(([path, definition]) => {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore();
-
+export const db = getFirestore(app);
+export const mystorage = getStorage(app)
 forumApp.mount('#app')
