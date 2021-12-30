@@ -15,7 +15,7 @@
 	</div>
 </template>
 <script>
-	import ThreadEditor from "@/components/ThreadEditor";
+	import ThreadEditor from "@/components/ThreadEditor.vue";
 	import { findById } from "@/helpers";
 	import { mapActions } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";

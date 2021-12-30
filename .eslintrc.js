@@ -1,19 +1,18 @@
 module.exports = {
   "root": true,
   "env": {
-    "node": true
+    es2022: true
   },
   "extends": [
     "plugin:vue/vue3-essential",
-    "eslint:recommended"
+    "eslint:recommended",
   ],
-  "parserOptions": {
-    "parser": "babel-eslint"
-  },
   "rules": {
-    "no-unused-vars": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-unused-vars": "off",
     "vue/comment-directive": ["off", {
-      "reportUnusedDisableDirectives": false
+      "reportUnusedDisableDirectives": false,
+      "@typescript-eslint/ban-ts-ignore": "off"
+
     }]
   }
 }

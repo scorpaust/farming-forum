@@ -22,9 +22,9 @@
 	</div>
 </template>
 <script>
-	import PostList from "@/components/PostList";
-	import UserProfileCard from "@/components/UserProfileCard";
-	import UserProfileCardEditor from "@/components/UserProfileCardEditor";
+	import PostList from "@/components/PostList.vue";
+	import UserProfileCard from "@/components/UserProfileCard.vue";
+	import UserProfileCardEditor from "@/components/UserProfileCardEditor.vue";
 	import { mapGetters } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";
 

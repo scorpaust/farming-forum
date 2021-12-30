@@ -4,9 +4,8 @@ import ClickOutsideDirective from '@/plugins/ClickOutsideDirective'
 import PageScrollDirective from '@/plugins/PageScrollDirective'
 import Vue3Pagination from '@/plugins/Vue3Pagination'
 import { createApp } from 'vue'
-import firebaseConfig from "@/config/firebase"
+import { firebaseConfig }  from "@/config/firebase"
 import fontAwesome from './plugins/fontAwesome'
-import { getAuth } from "firebase/auth"
 import { getFirestore } from "firebase/firestore"
 import { initializeApp } from "firebase/app";
 import router from '@/router'
@@ -20,21 +19,22 @@ forumApp.use(ClickOutsideDirective)
 forumApp.use(PageScrollDirective)
 forumApp.use(Vue3Pagination)
 
-const requireComponent = require.context('./components', true, /App[A-Z]\w+\.(vue|js)$/)
-requireComponent.keys().forEach(function (fileName) {
-  let baseComponentConfig = requireComponent(fileName)
-  baseComponentConfig = baseComponentConfig.default || baseComponentConfig
-  const baseComponentName = baseComponentConfig.name || (
-    fileName
-      .replace(/^.+\//, '')
-      .replace(/\.\w+$/, '')
-  )
-  forumApp.component(baseComponentName, baseComponentConfig)
+
+const components = import.meta.globEager('./components/App*')
+
+console.log(components)
+
+Object.entries(components).forEach(([path, definition]) => {
+  // Get name of component, based on filename
+  // "./components/Fruits.vue" will become "Fruits"
+  const componentName = path.split('/').pop().replace(/\.\w+$/, '')
+
+  // Register component on this Vue instance
+  forumApp.component(componentName, definition.default)
 })
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const db = getFirestore();
-
 
 forumApp.mount('#app')

@@ -38,8 +38,8 @@
 </template>
 
 <script>
-	import PostList from "@/components/PostList";
-	import PostEditor from "@/components/PostEditor";
+	import PostList from "@/components/PostList.vue";
+	import PostEditor from "@/components/PostEditor.vue";
 	import { mapActions, mapGetters } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";
 	import useNotifications from "@/composables/useNotifications";

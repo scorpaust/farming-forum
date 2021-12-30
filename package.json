@@ -3,34 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "db:seed": "firebase firestore:delete --all-collections --yes && node ./firestoreImport"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
+    "@firebase/storage-types": "^0.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@google-cloud/storage": "^5.16.1",
     "@hennge/vue3-pagination": "^1.0.17",
-    "core-js": "^3.6.5",
     "dayjs": "^1.10.7",
-    "firebase": "^9.6.0",
+    "firebase": "^9.6.1",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
-    "vue": "^3.0.0",
+    "vue": "^3.2.26",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0",
-    "firestore-export-import": "^0.17.0"
+    "@types/webpack-env": "^1.16.3",
+    "@vitejs/plugin-vue": "^1.6.1",
+    "eslint": "^8.4.1",
+    "eslint-plugin-vue": "^8.2.0",
+    "firestore-export-import": "^0.17.0",
+    "vite": "^2.5.4"
   },
   "browserslist": [
     "> 1%",

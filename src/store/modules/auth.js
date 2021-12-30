@@ -1,7 +1,9 @@
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
-import {collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where} from "firebase/firestore"
+import "firebase/storage";
 
-import { db } from '../../main'
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore"
+
+import { db } from "../../main"
 
 export default {
   namespaced: true,
@@ -39,6 +41,11 @@ export default {
         email,
         password
       )
+      // if (avatar) {
+        // const sb = storage.ref().child(`uploads/${result.user.uid}/images/${Date.now()}-${avatar.name}`)
+        // const snapshot = await sb.put(avatar)
+        //avatar = await snapshot.ref.getDownloadURL()
+      //}
       await dispatch('users/createUser', { id: result.user.uid, email, name, username, avatar }, {root: true} )
     },
     signInWithEmailAndPassword(context, {email, password}) {

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-	import PostEditor from "@/components/PostEditor";
+	import PostEditor from "@/components/PostEditor.vue";
 	import { mapActions } from "vuex";
 
 	export default {

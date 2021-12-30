@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import CategoryList from "@/components/CategoryList";
+	import CategoryList from "@/components/CategoryList.vue";
 	import { mapActions } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";
 

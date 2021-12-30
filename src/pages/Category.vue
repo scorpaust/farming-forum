@@ -9,7 +9,7 @@
 </template>
 
 <script>
-	import ForumList from "@/components/ForumList";
+	import ForumList from "@/components/ForumList.vue";
 	import { findById } from "@/helpers";
 	import { mapActions } from "vuex";
 	import asyncDataStatus from "@/mixins/asyncDataStatus";

@@ -12,8 +12,8 @@
 </template>
 
 <script>
-	import AppNotifications from "@/components/AppNotifications";
-	import TheNavbar from "./components/TheNavbar.vue";
+	import AppNotifications from "@/components/AppNotifications.vue";
+	import TheNavbar from "@/components/TheNavbar.vue";
 	import { mapActions } from "vuex";
 	import NProgress from "nprogress";
 
@@ -48,7 +48,7 @@
 
 <style>
 	@import "assets/style.css";
-	@import "~nprogress/nprogress.css";
+	@import "./../node_modules\nprogress\nprogress.css";
 
 	#nprogress .bar {
 		background: #57ad8d !important;

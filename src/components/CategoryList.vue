@@ -9,7 +9,7 @@
 </template>
 
 <script>
-	import ForumList from "@/components/ForumList";
+	import ForumList from "@/components/ForumList.vue";
 
 	export default {
 		props: {
