@@ -1,43 +1,46 @@
 <template>
 	<div class="flex-grid justify-center">
 		<div class="col-2">
-			<form @submit.prevent="register" class="card card-form">
+			<vee-form @submit="register" class="card card-form">
 				<h1 class="text-center">Register</h1>
 
-				<div class="form-group">
-					<label for="name">Full Name</label>
-					<input v-model="form.name" id="name" type="text" class="form-input" />
-				</div>
+				<app-form-field
+					v-model="form.name"
+					name="name"
+					label="Name"
+					rules="required"
+				/>
 
-				<div class="form-group">
-					<label for="username">Username</label>
-					<input
-						v-model="form.username"
-						id="username"
-						type="text"
-						class="form-input"
-					/>
-				</div>
+				<app-form-field
+					v-model="form.username"
+					name="username"
+					label="Username"
+					:rules="{
+						required: true,
+						unique: { mycollection: 'users', field: 'username' },
+					}"
+				/>
 
-				<div class="form-group">
-					<label for="email">Email</label>
-					<input
-						v-model="form.email"
-						id="email"
-						type="email"
-						class="form-input"
-					/>
-				</div>
+				<app-form-field
+					v-model="form.email"
+					name="email"
+					label="E-mail"
+					type="email"
+					:rules="{
+						required: true,
+						email: true,
+						unique: { mycollection: 'users', field: 'email' },
+					}"
+				/>
 
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input
-						v-model="form.password"
-						id="password"
-						type="password"
-						class="form-input"
-					/>
-				</div>
+				<app-form-field
+					v-model="form.password"
+					name="password"
+					id="password"
+					label="Password"
+					type="password"
+					rules="required|min:8"
+				/>
 
 				<div class="form-group">
 					<label for="avatar"
@@ -47,7 +50,8 @@
 							<img :src="avatarPreview" class="avatar-xlarge" />
 						</div>
 					</label>
-					<input
+					<vee-field
+						name="avatar"
 						v-show="!avatarPreview"
 						id="avatar"
 						type="file"
@@ -60,7 +64,7 @@
 				<div class="form-actions">
 					<button type="submit" class="btn-blue btn-block">Register</button>
 				</div>
-			</form>
+			</vee-form>
 			<div class="text-center push-top">
 				<button @click="registerWithGoogle" class="btn-red btn-xsmall">
 					<i class="fa fa-google fa-btn"></i>Sign up with Google

@@ -1,5 +1,5 @@
 <template>
-	<img :src="src || './user_placeholder.png'" />
+	<img :src="src || '/user_placeholder.png'" />
 </template>
 
 <script>

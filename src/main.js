@@ -2,6 +2,7 @@ import App from './App.vue'
 import AppDate from '@/components/AppDate.vue'
 import ClickOutsideDirective from '@/plugins/ClickOutsideDirective'
 import PageScrollDirective from '@/plugins/PageScrollDirective'
+import VeeValidatePlugin from "@/plugins/VeeValidatePlugin"
 import Vue3Pagination from '@/plugins/Vue3Pagination'
 import { createApp } from 'vue'
 import { firebaseConfig }  from "@/config/firebase"
@@ -19,7 +20,7 @@ forumApp.use(fontAwesome)
 forumApp.use(ClickOutsideDirective)
 forumApp.use(PageScrollDirective)
 forumApp.use(Vue3Pagination)
-
+forumApp.use(VeeValidatePlugin)
 
 const components = import.meta.globEager('./components/App*')
 
