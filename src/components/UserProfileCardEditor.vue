@@ -3,7 +3,7 @@
 		<form @submit.prevent="save">
 			<p class="text-center avatar-edit">
 				<label for="avatar">
-					<img
+					<app-avatar-image
 						:src="activeUser.avatar"
 						:alt="`${user.name} profile picture`"
 						class="avatar-xlarge img-update"
@@ -14,7 +14,7 @@
 							v-else
 							icon="camera"
 							size="3x"
-							style="{color: 'white', opacity: '0.8'}"
+							style="{text-color: 'white', opacity: '0.8'}"
 						/>
 					</div>
 					<input
@@ -26,6 +26,9 @@
 					/>
 				</label>
 			</p>
+			<user-profile-card-editor-random-avatar
+				@hit="activeUser.avatar = $event"
+			/>
 
 			<div class="form-group">
 				<input
@@ -102,6 +105,7 @@
 
 <script>
 	import { mapActions } from "vuex";
+	import UserProfileCardEditorRandomAvatar from "@/components/UserProfileCardEditorRandomAvatar.vue";
 
 	export default {
 		props: {
@@ -109,6 +113,9 @@
 				type: Object,
 				required: true,
 			},
+		},
+		components: {
+			UserProfileCardEditorRandomAvatar,
 		},
 		data() {
 			return {
@@ -125,7 +132,20 @@
 				this.activeUser.avatar = uploadedImage || this.activeUser.avatar;
 				this.uploadingImage = false;
 			},
-			save() {
+			async handleRandomAvatarUpload() {
+				const randomAvatarGenerated =
+					this.activeUser.avatar.startsWith("https://pixabay");
+				if (randomAvatarGenerated) {
+					const image = await fetch(this.activeUser.avatar);
+					const blob = await image.blob();
+					this.activeUser.avatar = await this.uploadAvatar({
+						file: blob,
+						filename: "random",
+					});
+				}
+			},
+			async save() {
+				await this.handleRandomAvatarUpload();
 				this.$store.dispatch("users/updateUser", { ...this.activeUser });
 				this.$router.push({ name: "Profile" });
 			},
