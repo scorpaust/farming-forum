@@ -4,6 +4,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
 
 import { db } from "../../main"
 import { mystorage } from "../../main"
+import useNotifications from "@/composables/useNotifications"
 
 export default {
   namespaced: true,
@@ -41,14 +42,20 @@ export default {
         email,
         password
       )
-      if (avatar) {
-        const imageref = ref(mystorage, `uploads/${result.user.uid}/images/${Date.now()}-${avatar.name}`)
-        uploadBytesResumable(imageref, avatar).then(async (snapshot) => {
-        await getDownloadURL(snapshot.ref).then((url) => {
-          dispatch('users/createUser', { id: result.user.uid, email, name, username, avatar: url }, {root: true} )
-        })        
-      })
-    }
+      avatar = await dispatch('uploadAvatar', {authId: result.user.uid, file: avatar})
+      await dispatch('users/createUser', { id: result.user.uid, email, name, username, avatar }, { root: true })
+    },
+    async uploadAvatar({state}, {authId, file}) {
+      if (!file) return null
+      authId = authId || state.authId
+      try {
+        const imageref = ref(mystorage, `uploads/${authId}/images/${Date.now()}-${file.name}`)
+        const snapshot = await uploadBytesResumable(imageref, file)
+        return getDownloadURL(snapshot.ref)   
+      }catch(error) {
+        const { addNotification } = useNotifications()
+        addNotification({message: 'Error uploading profile image.', type: 'error'})
+      }
     },
     signInWithEmailAndPassword(context, {email, password}) {
       const auth = getAuth()
