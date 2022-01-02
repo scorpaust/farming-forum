@@ -27,4 +27,4 @@ pnpm-debug.log*
 
 # Firebase
 serviceAccount.json
-src/config/firebase.js
+
