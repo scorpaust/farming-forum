@@ -1,12 +1,11 @@
 import App from './App.vue'
-import AppDate from '@/components/AppDate.vue'
 import ClickOutsideDirective from '@/plugins/ClickOutsideDirective'
 import PageScrollDirective from '@/plugins/PageScrollDirective'
 import VeeValidatePlugin from "@/plugins/VeeValidatePlugin"
 import Vue3Pagination from '@/plugins/Vue3Pagination'
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
-import { firebaseConfig }  from "@/config/firebase"
+import { firebaseConfig }  from "@/config/firebase.js"
 import fontAwesome from './plugins/fontAwesome'
 import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
