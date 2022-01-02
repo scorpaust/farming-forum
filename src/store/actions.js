@@ -8,7 +8,6 @@ export default {
     
     
     fetchItem ({state, commit}, { id, emoji, resource, handleUnsubscribe = null, once = false, onSnapshot = null}) {
-      console.log('🔥', emoji, id)
       return new Promise((res) => {
         const docRef = doc(db, `${resource}/${id}`);
         const unsubscribe = getDoc(docRef).then((doc) => {
@@ -36,11 +35,15 @@ export default {
       })
     },
     fetchItems({ dispatch }, { ids, resource, emoji, onSnapshot = null }) {
+      ids = ids || []
       return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource, emoji, onSnapshot })))
       
     },
     async unsubscribeAllSnapshots({state, commit}) {
       state.unsubscribes.forEach((unsubscribe) => `${unsubscribe}()`)
       commit('clearAllUnsubscribes')
+    },
+    clearItems({commit}, {modules = []}) {
+      commit('clearItems', { modules })
     }
 }

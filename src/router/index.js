@@ -40,7 +40,6 @@ const routes = [
     }
     // if doesn´t exist redirect user to PageNotFound
     else {
-      console.log("não existe")
       return next({name: 'NotFound', params: { pathMatch: to.path.substring(1).split('/') }, 
       // preserve existing query and hash
       query: to.query, hash: to.hash})
@@ -79,6 +78,10 @@ const router = createRouter({
     if (to.meta.smoothScroll) scroll.behavior = 'smooth'
     return scroll
   }
+})
+
+router.afterEach(() => {
+  store.dispatch('clearItems', {modules: ['categories', 'forums', 'posts', 'threads']})
 })
 
 router.beforeEach(async (to, from) => {

@@ -89,7 +89,6 @@
 				const posts = await this.fetchPosts({
 					ids,
 					onSnapshot: ({ isLocal, previousItem }) => {
-						console.log(isLocal);
 						if (
 							!this.asyncDataStatus_ready ||
 							isLocal ||

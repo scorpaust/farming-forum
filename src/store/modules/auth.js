@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { EmailAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup, updateEmail } from "firebase/auth"
 import { collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
 
@@ -19,6 +19,13 @@ export default {
     },
   },
   actions: {
+    async updateEmail({state}, {email}) {
+      return updateEmail(getAuth().currentUser, email)
+    },
+    async reauthenticate({state}, {email, password}) {
+      const auth = getAuth()
+      await signInWithEmailAndPassword(auth, email, password)
+    },
     initAuthentication({state, dispatch, commit}) {
       if (state.authObserverUnsubscribe) state.authObserverUnsubscribe()
       return new Promise((res) => {

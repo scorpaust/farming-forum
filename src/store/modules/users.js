@@ -21,8 +21,8 @@ export default {
           get postsCount () {
             return user.postsCount || 0
           },
-          get threads () {
-            return rootState.threads.items.filter(post => post.userId === user.id)
+          get threadIds () {
+            return user.threads
           },
           get threadsCount () {
             return user.threads?.length || 0
