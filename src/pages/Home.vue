@@ -25,13 +25,11 @@
 			...mapActions("forums", ["fetchForums"]),
 		},
 		async created() {
-			const categories = await this.fetchAllCategories().then(
-				async (categories) => {
-					const forumIds = categories.map((category) => category.forums).flat();
-					await this.fetchForums({ ids: forumIds });
-					this.asyncDataStatus_fetched();
-				}
-			);
+			await this.fetchAllCategories().then(async (categories) => {
+				const forumIds = categories.map((category) => category.forums).flat();
+				await this.fetchForums({ ids: forumIds });
+				this.asyncDataStatus_fetched();
+			});
 		},
 	};
 </script>
