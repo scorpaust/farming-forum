@@ -5,6 +5,7 @@ import PageScrollDirective from '@/plugins/PageScrollDirective'
 import VeeValidatePlugin from "@/plugins/VeeValidatePlugin"
 import Vue3Pagination from '@/plugins/Vue3Pagination'
 import { createApp } from 'vue'
+import { createHead } from '@vueuse/head'
 import { firebaseConfig }  from "@/config/firebase"
 import fontAwesome from './plugins/fontAwesome'
 import { getFirestore } from "firebase/firestore"
@@ -21,6 +22,7 @@ forumApp.use(ClickOutsideDirective)
 forumApp.use(PageScrollDirective)
 forumApp.use(Vue3Pagination)
 forumApp.use(VeeValidatePlugin)
+forumApp.use(createHead())
 
 const components = import.meta.globEager('./components/App*')
 

@@ -1,4 +1,11 @@
 <template>
+	<app-head>
+		<title>Farming Forum</title>
+		<meta
+			name="description"
+			content="A great farming forum regarding a lot of different issues regarding all kind of farming activities around the World."
+		/>
+	</app-head>
 	<the-navbar />
 	<div class="container">
 		<router-view

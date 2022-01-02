@@ -1,6 +1,9 @@
 <template>
 	<div v-if="asyncDataStatus_ready" class="col-full">
 		<div v-if="forum" class="col-full push-top">
+			<app-head>
+				<title>{{ forum?.name }}</title>
+			</app-head>
 			<div class="forum-header">
 				<div class="forum-details">
 					<h1>{{ forum.name }}</h1>
