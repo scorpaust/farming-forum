@@ -11,7 +11,7 @@
 				</div>
 				<hr />
 				<post-list :posts="user.posts" />
-				<app-inifinite-scroll
+				<app-infinite-scroll
 					@load="fetchUserPosts"
 					:done="user.posts.length === user.postsCount"
 				/>
