@@ -1,22 +1,23 @@
 <template>
 	<div class="post-list">
 		<div class="post" v-for="post in posts" :key="post.id">
-			<div v-if="userById(post.userId)" class="user-info">
-				<a href="#" class="user-name">{{ userById(post.userId).name }}</a>
+			<div v-if="user(post.userId)" class="user-info">
+				<a href="#" class="user-name">{{ user(post.userId).name }}</a>
 
 				<a href="#">
 					<app-avatar-image
 						class="avatar-large"
-						:src="userById(post.userId).avatar"
+						:src="user(post.userId).avatar"
 						alt=""
 					/>
 				</a>
-
 				<p class="desktop-only text-small">
-					{{ userById(post.userId).postsCount }} posts
+					{{ userPostsCount(post.userId) }}
+					{{ userPostsCount(post.userId) > 1 ? "posts" : "post" }}
 				</p>
 				<p class="desktop-only text-small">
-					{{ userById(post.userId).threadsCount }} threads
+					{{ user(post.userId).threadsCount }}
+					{{ user(post.userId).threadsCount > 1 ? "threads" : "thread" }}
 				</p>
 			</div>
 
@@ -52,7 +53,7 @@
 
 <script>
 	import PostEditor from "@/components/PostEditor.vue";
-	import { mapActions } from "vuex";
+	import { mapActions, mapGetters } from "vuex";
 
 	export default {
 		props: {
@@ -70,6 +71,7 @@
 			};
 		},
 		computed: {
+			...mapGetters("users", ["user"]),
 			users() {
 				return this.$store.state.users.items;
 			},
@@ -79,12 +81,8 @@
 			userById(userId) {
 				return this.$store.getters["users/user"](userId);
 			},
-			toggleEditMode(id) {
-				this.editing = id === this.editing ? null : id;
-			},
-			handleUpdate(event) {
-				this.updatePost(event.post);
-				this.editing = null;
+			userPostsCount(id) {
+				return this.user(id).postsCount;
 			},
 		},
 	};
