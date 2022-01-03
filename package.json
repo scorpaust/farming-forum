@@ -24,8 +24,11 @@
     "nprogress": "^0.2.0",
     "vue": "^3.2.26",
     "vue-final-modal": "^3.4.3",
+    "vue-google-translate": "0.0.10",
+    "vue-i18n": "^9.2.0-beta.26",
     "vue-router": "^4.0.12",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.16.3",
@@ -35,6 +38,7 @@
     "firestore-export-import": "^0.17.0",
     "vee-validate": "^4.5.7",
     "vite": "^2.5.4",
+    "vue-cli-plugin-i18n": "~2.3.1",
     "vue-cli-plugin-webpack-bundle-analyzer": "^4.0.0"
   },
   "browserslist": [

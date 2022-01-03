@@ -1,5 +1,5 @@
 import { arrayUnion, collection, doc, getDoc, increment, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
-import { makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
+import { findById, makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
 
 import { db } from "../../main"
 
@@ -10,7 +10,7 @@ export default {
   },
   getters: {},
   actions: {
-    async createPost({commit, state, rootState}, post) {
+    async createPost({commit, store, state, rootState}, post) {
       post.userId  = rootState.auth.authId
       post.publishedAt = serverTimestamp()
       post.firstInThread = post.firstInThread || false

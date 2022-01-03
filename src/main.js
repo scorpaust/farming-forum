@@ -5,6 +5,7 @@ import VeeValidatePlugin from "@/plugins/VeeValidatePlugin"
 import Vue3Pagination from '@/plugins/Vue3Pagination'
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
+import { createI18n } from 'vue-i18n'
 import { firebaseConfig }  from "@/config/firebase.js"
 import fontAwesome from './plugins/fontAwesome'
 import { getFirestore } from "firebase/firestore"
@@ -12,6 +13,10 @@ import { getStorage } from "firebase/storage"
 import { initializeApp } from "firebase/app";
 import router from '@/router'
 import store from '@/store'
+
+const i18n = createI18n({
+  // something vue-i18n options here ...
+})
 
 const forumApp = createApp(App)
 forumApp.use(router)
@@ -21,6 +26,7 @@ forumApp.use(ClickOutsideDirective)
 forumApp.use(PageScrollDirective)
 forumApp.use(Vue3Pagination)
 forumApp.use(VeeValidatePlugin)
+forumApp.use(i18n)
 forumApp.use(createHead())
 
 const components = import.meta.globEager('./components/App*')

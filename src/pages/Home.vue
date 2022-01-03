@@ -24,7 +24,7 @@
 			...mapActions("categories", ["fetchAllCategories"]),
 			...mapActions("forums", ["fetchForums"]),
 		},
-		async created() {
+		async mounted() {
 			await this.fetchAllCategories().then(async (categories) => {
 				const forumIds = categories.map((category) => category.forums).flat();
 				await this.fetchForums({ ids: forumIds });
